@@ -1,0 +1,33 @@
+{
+  "env": {
+    "browser": true
+  },
+
+  "plugins": [
+    "react"
+  ],
+
+  "globals": {
+    "expect": false,
+    "tinydoc": false
+  },
+
+  "ecmaFeatures": {
+    "blockBindings": true,
+    "arrowFunctions": true,
+    "classes": true,
+    "templateStrings": true,
+    "destructuring": true,
+    "objectLiteralShorthandMethods": true,
+    "spread": true,
+    "restParams": true,
+    "jsx": true,
+  },
+
+  "rules": {
+    "react/jsx-uses-react": 2,
+    "react/jsx-no-undef": 2,
+    "react/react-in-jsx-scope": 2,
+    "react/prop-types": [2],
+  }
+}
