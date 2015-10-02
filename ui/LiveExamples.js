@@ -1,5 +1,5 @@
 const React = require('react');
-const LiveExampleJSXTag = require('./LiveExampleJSXTag');
+const LiveExampleJSXTag = require('./LiveExampleTag');
 
 module.exports = function createLiveExamples(config) {
   return React.createClass({

@@ -1,4 +1,6 @@
 const React = require('react');
+const { template } = require('lodash');
+const contentScript = template(require('raw!./contentScript.tmpl.js'));
 const { arrayOf, string } = React.PropTypes;
 
 const ExampleRunner = React.createClass({
@@ -6,6 +8,13 @@ const ExampleRunner = React.createClass({
     styleSheets: arrayOf(string),
     scripts: arrayOf(string),
     code: string,
+    messageSource: string,
+  },
+
+  componentDidMount() {
+    console.assert(window.top !== window,
+      "ExampleRunner must run inside an <iframe />"
+    );
   },
 
   render() {
@@ -24,13 +33,18 @@ const ExampleRunner = React.createClass({
         </head>
 
         <body>
-          <p>Loading...</p>
+          <div id="example" />
 
           {this.props.scripts.map(this.renderScript)}
 
           <script
             dangerouslySetInnerHTML={{
-              __html: `React.render(${this.props.code}, document.body);`
+              __html: contentScript({
+                origin: this.props.origin,
+                code: this.props.code,
+                contentBoxSelector: '#example',
+                messageSource: this.props.messageSource,
+              })
             }}
           />
         </body>

@@ -1,0 +1,9 @@
+exports.string = require('./PTString');
+exports.number = require('./PTNumber');
+exports.bool = require('./PTBool');
+exports.func = require('./PTGeneric');
+exports.node = require('./PTGeneric');
+exports.any = require('./PTGeneric');
+exports.element = require('./PTGeneric');
+exports.shape = require('./PTShape');
+exports.oneOfType = require('./PTOneOfType');

@@ -2,6 +2,8 @@ const React = require("react");
 const MarkdownText = require('components/MarkdownText');
 const Button = require('components/Button');
 const ExampleRunner = require('./ExampleRunner');
+const IFrameCommunicator = require('./mixins/IFrameCommunicator');
+const renderIntoIFrame = require('./utils/renderIntoIFrame');
 
 const TAB_CODE = 'code';
 const TAB_PREVIEW = 'preview';
@@ -9,6 +11,23 @@ const TAB_PREVIEW = 'preview';
 const { shape, arrayOf, string } = React.PropTypes;
 
 const LiveExampleJSXTag = React.createClass({
+  mixins: [
+    IFrameCommunicator.createMixin(function(message) {
+      switch (message.type) {
+        case 'ready':
+          this.setState({ ready: true });
+          break;
+
+        case 'resize':
+          this.setState({
+            frameWidth: message.payload.width,
+            frameHeight: message.payload.height,
+          });
+          break;
+      }
+    })
+  ],
+
   propTypes: {
     config: shape({
       scripts: arrayOf(string),
@@ -26,29 +45,28 @@ const LiveExampleJSXTag = React.createClass({
     }),
   },
 
-  getInitialState: function() {
+  getInitialState() {
     return {
-      activeTab: TAB_PREVIEW
+      activeTab: TAB_PREVIEW,
+      ready: false,
+      frameWidth: null,
+      frameHeight: null,
     };
   },
 
-  componentDidMount: function() {
+  componentDidMount() {
     const { config } = this.props;
-    const iframe = React.findDOMNode(this.refs.iframe);
-    const { document } = iframe.contentWindow;
 
-    // this could be made better if we want an interactive session
-    document.open();
-    document.write(
-      React.renderToStaticMarkup(
-        <ExampleRunner
-          scripts={config.scripts}
-          styleSheets={config.styleSheets}
-          code={this.props.tag.code.compiled}
-        />
-      )
+    renderIntoIFrame(
+      <ExampleRunner
+        scripts={config.scripts}
+        styleSheets={config.styleSheets}
+        code={this.props.tag.code.compiled}
+        messageSource={IFrameCommunicator.getUID(this)}
+        origin={IFrameCommunicator.getOrigin()}
+      />,
+      React.findDOMNode(this.refs.iframe)
     );
-    document.close();
   },
 
   render() {
@@ -68,15 +86,26 @@ const LiveExampleJSXTag = React.createClass({
           </MarkdownText>
         )}
 
-        <iframe
-          ref="iframe"
-          className="live-example-tag__iframe"
-          style={{
-            display: this.state.activeTab === TAB_PREVIEW ? 'block' : 'none',
-            width: tag.width || 'auto',
-            height: tag.height || 'auto',
-          }}
-        />
+        <div
+          className={`
+            live-example-tag__iframe-container
+            ${this.state.activeTab !== TAB_PREVIEW ?
+              'live-example-tag__iframe-container--hidden' :
+              ''
+            }
+          `}
+        >
+          {!this.state.ready && <span>Loading...</span>}
+
+          <iframe
+            ref="iframe"
+            className="live-example-tag__iframe"
+            style={{
+              width: tag.width || this.state.frameWidth,
+              height: tag.height || this.state.frameHeight,
+            }}
+          />
+        </div>
       </div>
     );
   },
@@ -103,7 +132,7 @@ const LiveExampleJSXTag = React.createClass({
         />
       </div>
     );
-  }
+  },
 });
 
 module.exports = LiveExampleJSXTag;
