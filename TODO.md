@@ -1,8 +1,8 @@
 - migrate to @example {jsx} instead of @live_example
 - accept default dimensions for live examples
 - show pre-defined examples in the RT editor
-- support for `module.exports = React.createClass({})`
-- support for `displayName` override
+- ~~support for `module.exports = React.createClass({})`~~
+- ~~support for `displayName` override~~
 - ESC to close RT editor
 - figure out how to handle namespaced components
 - RT editor: don't start until all isRequired properties are set
