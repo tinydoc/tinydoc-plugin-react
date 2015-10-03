@@ -33,7 +33,7 @@ const ExampleRunner = React.createClass({
         </head>
 
         <body>
-          <div id="example" />
+          <div id="example" style={{ padding: '1em' }} />
 
           {this.props.scripts.map(this.renderScript)}
 

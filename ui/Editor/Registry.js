@@ -5,5 +5,5 @@ exports.setRenderers = function(renderers) {
 };
 
 exports.get = function(propTypeType) {
-  return typeRenderers[propTypeType];
+  return typeRenderers[propTypeType] || typeRenderers['*'];
 };

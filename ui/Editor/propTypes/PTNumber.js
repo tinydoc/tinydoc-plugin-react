@@ -12,7 +12,17 @@ const PTNumber = React.createClass({
   },
 
   emitChange(e) {
-    this.props.onChange(this.props.path, e.target.value);
+    const number = e.target.value;
+    let newValue;
+
+    if (number.length === 0) {
+      newValue = undefined;
+    }
+    else {
+      newValue = parseFloat(number);
+    }
+
+    this.props.onChange(this.props.path, newValue);
   }
 });
 

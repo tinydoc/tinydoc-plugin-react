@@ -3,6 +3,30 @@ const { string, func, shape, any, bool } = React.PropTypes;
 const Registry = require('./Registry');
 const MarkdownText = require('components/MarkdownText');
 
+const Header = React.createClass({
+  render() {
+    const { propType } = this.props;
+
+    return (
+      <div className="react-editor__prop-header">
+        <strong>{propType.name}</strong>
+
+        {' '}
+
+        <code className="react-editor__prop-type">
+          {propType.type}
+
+          {propType.isRequired && (
+            <span className="react-editor__prop-isRequired">
+              {' REQUIRED'}
+            </span>
+          )}
+        </code>
+      </div>
+    )
+  }
+});
+
 const PropType = React.createClass({
   propTypes: {
     path: string,
@@ -28,7 +52,12 @@ const PropType = React.createClass({
     const Component = Registry.get(propType.type);
 
     if (!Component) {
-      return <span>Unsupported propType "{propType.type}"</span>;
+      return (
+        <div>
+          {this.props.withHeader && <Header propType={propType} />}
+          <span>Unsupported propType "{propType.type}"</span>;
+        </div>
+      );
     }
 
     const path = [ this.props.path, propType.name ].filter(v => !!v).join('.');
@@ -38,17 +67,13 @@ const PropType = React.createClass({
     return (
       <TagName key={path} className="react-editor__prop">
         {this.props.withHeader && (
-          <div className="react-editor__prop-header">
-            <strong>{propType.name}</strong>
-            {' '}
-            <code className="react-editor__prop-type">
-              {propType.type}
-            </code>
-          </div>
+          <Header propType={propType} />
         )}
 
         {description && (
-          <MarkdownText>{description}</MarkdownText>
+          <MarkdownText className="react-editor__prop-description">
+            {description}
+          </MarkdownText>
         )}
 
         <Component

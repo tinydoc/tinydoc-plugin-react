@@ -7,3 +7,5 @@ exports.any = require('./PTGeneric');
 exports.element = require('./PTGeneric');
 exports.shape = require('./PTShape');
 exports.oneOfType = require('./PTOneOfType');
+exports.oneOf = require('./PTOneOf');
+exports['*'] = require('./PTGeneric');

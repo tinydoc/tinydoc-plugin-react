@@ -13,7 +13,7 @@ const PTGeneric = React.createClass({
   },
 
   render() {
-    const { value } = this.props;
+    const value = this.props.value || {};
 
     return (
       <div>
@@ -35,18 +35,31 @@ const PTGeneric = React.createClass({
   },
 
   emitChangeOfText(e) {
-    this.emitChange(e.target.value, this.props.value.eval);
+    this.emitChange(e.target.value, this.getEval());
   },
 
   emitChange(text, shouldEval) {
-    this.props.onChange(this.props.path, {
-      eval: shouldEval,
-      code: text
-    });
+    if (!text || !text.length) {
+      this.props.onChange(this.props.path, undefined);
+    }
+    else {
+      this.props.onChange(this.props.path, {
+        eval: shouldEval,
+        code: text
+      });
+    }
   },
 
   emitChangeOfEval(e) {
-    this.emitChange(this.props.value.code, e.target.checked);
+    this.emitChange(this.getCode(), e.target.checked);
+  },
+
+  getCode() {
+    return this.props.value && this.props.value.code;
+  },
+
+  getEval() {
+    return this.props.value && this.props.value.eval;
   }
 });
 

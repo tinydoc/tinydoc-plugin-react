@@ -80,6 +80,16 @@
     opacity: 0.5;
   }
 
+  &__prop-isRequired {
+    font-weight: bold;
+    float: right;
+    line-height: 2;
+  }
+
+  &__prop-description {
+    font-size: 0.8em;
+  }
+
   &__close-btn {
     position: fixed;
     right: 5%;
@@ -102,6 +112,10 @@
   &__error-header {
     font-weight: bold;
     margin: 0 0 1em 0;
+  }
+
+  &__error-message {
+    white-space: normal;
   }
 }
 
@@ -131,10 +145,19 @@
       background: @base2;
       box-shadow: 0 0 0 1px @border-color;
       color: @base1;
+
+      .hljs {
+        background: @border-color;
+      }
     }
 
     &__prop-type {
       background-color: transparent;
+      color: @solarized-cyan;
+    }
+
+    &__prop-isRequired {
+      color: @solarized-red;
     }
 
     &__error-box {
@@ -172,7 +195,6 @@
         border-radius: 4px;
         border: none;
         margin: 0;
-        padding: 1em;
       }
     }
   }
@@ -180,7 +202,7 @@
   .live-example-tag {
     &__iframe-container {
       border: 3px solid @border-color;
-      padding: 1em;
+      // padding: 1em;
       width: auto;
       display: inline-block;
       background: white;

@@ -80,7 +80,7 @@ const LiveExampleJSXTag = React.createClass({
           <MarkdownText>
             {[
               '```js',
-              tag.code.source.replace(/[ ]{4}/g, ''),
+              tag.code.source.replace(/^[ ]{4}/gm, ''),
               '```'
             ].join('\n')}
           </MarkdownText>

@@ -180,22 +180,49 @@ const Editor = React.createClass({
     const entityDoc = moduleDocs.filter(d => d.id === path)[0];
 
     if (entityDoc) {
-      return entityDoc.description;
+      if (entityDoc.description.length) {
+        return entityDoc.description;
+      }
+      else {
+        const propertyTag = entityDoc.tags.filter(t => t.type === 'property')[0];
+
+        if (propertyTag) {
+          return propertyTag.typeInfo.description;
+        }
+      }
     }
   },
 
   setExampleProp(path, value, options = {}) {
-    let newProps = {};
+    let nextProps = {};
 
-    set(newProps, path, value);
+    if (value === undefined) {
+      nextProps = this.deleteExamplePropAt(path);
+    }
+    else {
+      set(nextProps, path, value);
+      nextProps = merge({}, this.state.props, nextProps);
+    }
 
-    this.setState({
-      props: merge({}, this.state.props, newProps)
-    }, () => {
+    this.setState({ props: nextProps }, () => {
       if (options.shouldReload) {
         this.reloadExampleWithCurrentProps();
       }
     });
+  },
+
+  deleteExamplePropAt(path) {
+    const fragments = path.split('.');
+
+    let props = merge({}, this.state.props);
+
+    fragments.slice(0, -1).forEach(function(fragment) {
+      props = props[fragment];
+    });
+
+    delete props[fragments.slice(-1)];
+
+    return props;
   },
 
   reloadExampleWithCurrentProps(e) {

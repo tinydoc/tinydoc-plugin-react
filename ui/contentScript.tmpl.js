@@ -5,11 +5,25 @@ var origin = "<%- origin %>";
 // Events
 // ----------------------------------------------------------------------------
 window.addEventListener('message', function(e) {
+  var type;
+
   if (e.origin !== origin) {
     return;
   }
 
-  render(window[e.data.elementName], e.data.props);
+  type = window[e.data.elementName];
+
+  if (type) {
+    render(type, e.data.props);
+  }
+  else {
+    postMessageToParent('error', {
+      message: (
+        'Component with the name "' + e.data.elementName + '" does not exist! ' +
+        'This probably means the component was not exported correctly.'
+      )
+    });
+  }
 }, false);
 
 window.addEventListener('DOMContentLoaded', function() {
@@ -34,12 +48,14 @@ function render(type, newProps) {
 
   var invalid = false;
   var props = Object.keys(newProps).reduce(function(_props, key) {
+    var value = newProps[key];
+
     if (invalid) {
       return _props;
     }
 
-    if (typeof newProps[key] === 'object' && newProps[key].eval) {
-      var code = '_props[key] = ' + String(newProps[key].code);
+    if (!!value && typeof value === 'object' && value.eval) {
+      var code = '_props[key] = ' + String(value.code);
 
       try {
         eval(code);
@@ -51,14 +67,14 @@ function render(type, newProps) {
           message: e.message,
           context: 'eval',
           propName: key,
-          propValue: newProps[key].value,
+          propValue: value.value,
         });
 
         invalid = true;
       }
     }
     else {
-      _props[key] = newProps[key];
+      _props[key] = value;
     }
 
     return _props;
