@@ -4,6 +4,8 @@ const Button = require('components/Button');
 const ExampleRunner = require('./ExampleRunner');
 const IFrameCommunicator = require('./mixins/IFrameCommunicator');
 const renderIntoIFrame = require('./utils/renderIntoIFrame');
+const $ = require('jQueryUI');
+const { debounce } = require('lodash');
 
 const TAB_CODE = 'code';
 const TAB_PREVIEW = 'preview';
@@ -51,6 +53,7 @@ const LiveExampleJSXTag = React.createClass({
       ready: false,
       frameWidth: null,
       frameHeight: null,
+      maximized: false,
     };
   },
 
@@ -67,10 +70,20 @@ const LiveExampleJSXTag = React.createClass({
       />,
       React.findDOMNode(this.refs.iframe)
     );
+
+    $(React.findDOMNode(this.refs.iframeContainer))
+      .resizable({})
+      .on('resize', this.maximizeFrame)
+    ;
+  },
+
+  componentWillUnmount: function() {
+    $(React.findDOMNode(this.refs.iframeContainer)).resizable('destroy');
   },
 
   render() {
     const { tag } = this.props;
+    const { maximized } = this.state;
 
     return (
       <div className="live-example-tag">
@@ -94,6 +107,7 @@ const LiveExampleJSXTag = React.createClass({
               ''
             }
           `}
+          ref="iframeContainer"
         >
           {!this.state.ready && <span>Loading...</span>}
 
@@ -101,8 +115,8 @@ const LiveExampleJSXTag = React.createClass({
             ref="iframe"
             className="live-example-tag__iframe"
             style={{
-              width: tag.width || this.state.frameWidth,
-              height: tag.height || this.state.frameHeight,
+              width: maximized ? '100%' : tag.width || this.state.frameWidth,
+              height: maximized ? '100%' : tag.height || this.state.frameHeight,
             }}
           />
         </div>
@@ -133,6 +147,14 @@ const LiveExampleJSXTag = React.createClass({
       </div>
     );
   },
+
+
+  maximizeFrame(e, ui) {
+    if (!this.state.maximized) {
+      this.setState({ maximized: true });
+    }
+  },
+
 });
 
 module.exports = LiveExampleJSXTag;
