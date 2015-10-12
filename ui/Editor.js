@@ -4,12 +4,10 @@ const get = require('lodash/object/get');
 const set = require('lodash/object/set');
 const { merge } = require('lodash');
 const Button = require('components/Button');
-const Checkbox = require('components/Checkbox');
 const IFrameCommunicator = require('./mixins/IFrameCommunicator');
 const renderIntoIFrame = require('./utils/renderIntoIFrame');
 const PropType = require('./Editor/PropType');
 const Registry = require('./Editor/Registry');
-const evalProps = require('./utils/evalProps');
 
 Registry.setRenderers(require('./Editor/propTypes'));
 
@@ -157,7 +155,7 @@ const Editor = React.createClass({
 
   renderPresets() {
     const presets = this.props.moduleDoc.tags.filter(function(tag) {
-      return tag.type === 'live_example' && tag.exampleType === 'jsx';
+      return tag.type === 'example' && tag.typeInfo.types[0] === 'jsx';
     });
 
     return (
@@ -169,8 +167,10 @@ const Editor = React.createClass({
   },
 
   renderPreset(tag, i) {
+    const sourceCode = tag.sourceCode;
+
     return (
-      <option key={tag.sourceCode} value={tag.sourceCode}>
+      <option key={sourceCode} value={sourceCode}>
         Preset {i+1}
       </option>
     )
@@ -252,11 +252,15 @@ const Editor = React.createClass({
       e.preventDefault();
     }
 
+    this.reloadExampleWithProps(this.state.props);
+  },
+
+  reloadExampleWithProps(props) {
     IFrameCommunicator.postMessage(React.findDOMNode(this.refs.iframe), {
       type: 'render',
       payload: {
-        elementName: this.getModuleDoc().name,
-        props: this.state.props,
+        elementName: this.props.moduleDoc.name,
+        props,
       }
     });
   },
@@ -281,10 +285,13 @@ const Editor = React.createClass({
       return tag.sourceCode === sourceCode;
     })[0];
 
-    const props = tag ? evalProps(tag.elementProps) : {};
+    if (!tag) {
+      return;
+    }
 
-    this.setState({ props }, () => {
-      this.reloadExampleWithCurrentProps();
+    this.reloadExampleWithProps({
+      string: tag.elementProps,
+      eval: true
     });
   }
 });

@@ -6,7 +6,6 @@ const IFrameCommunicator = require('./mixins/IFrameCommunicator');
 const renderIntoIFrame = require('./utils/renderIntoIFrame');
 const $ = require('jQueryUI');
 const { debounce } = require('lodash');
-const evalProps = require('./utils/evalProps');
 
 const TAB_CODE = 'code';
 const TAB_PREVIEW = 'preview';
@@ -22,15 +21,20 @@ const LiveExampleJSXTag = React.createClass({
 
           console.log(tag.elementProps)
 
-          this.setState({ ready: true });
-
           IFrameCommunicator.postMessage(React.findDOMNode(this.refs.iframe), {
             type: 'render',
             payload: {
               elementName: tag.elementName,
-              props: evalProps(tag.elementProps),
+              props: {
+                eval: true,
+                string: tag.elementProps
+              }
             }
           });
+          break;
+
+        case 'updated':
+          this.setState({ ready: true });
           break;
 
         case 'resize':
@@ -112,6 +116,7 @@ const LiveExampleJSXTag = React.createClass({
         )}
 
         <div
+          ref="iframeContainer"
           className={`
             live-example-tag__iframe-container
             ${this.state.activeTab !== TAB_PREVIEW ?
@@ -119,9 +124,10 @@ const LiveExampleJSXTag = React.createClass({
               ''
             }
           `}
-          ref="iframeContainer"
         >
-          {!this.state.ready && <span>Loading...</span>}
+          {!this.state.ready && (
+            <span className="loading-indicator">Loading...</span>
+          )}
 
           <iframe
             ref="iframe"
@@ -160,13 +166,11 @@ const LiveExampleJSXTag = React.createClass({
     );
   },
 
-
   maximizeFrame(e, ui) {
     if (!this.state.maximized) {
       this.setState({ maximized: true });
     }
   },
-
 });
 
 module.exports = LiveExampleJSXTag;

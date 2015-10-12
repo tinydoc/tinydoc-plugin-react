@@ -1,16 +1,22 @@
 const React = require('react');
 const Router = require('core/Router');
 const Editor = require('./Editor');
+const LiveExampleTag = require('./LiveExampleTag');
 
 require('./css/index.less');
 
 tinydoc.use(function ReactPlugin(api) {
   tinydoc.getRuntimeConfigs('react').forEach(function(config) {
-    api.registerOutletElement('CJS::Tag', {
-      component: require('./LiveExamples')(config),
-      position: {
-        after: 'CJS::ExampleTags'
-      }
+    api.registerOutletElement('CJS::ExampleTag', {
+      match: function(tag) {
+        return tag.typeInfo.types[0] === 'jsx';
+      },
+
+      component: React.createClass({
+        render() {
+          return <LiveExampleTag tag={this.props} config={config} />;
+        }
+      })
     });
 
     api.registerOutletElement('CJS::ModuleHeader::Type', {

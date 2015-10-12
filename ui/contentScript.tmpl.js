@@ -89,6 +89,26 @@ window.addEventListener('message', onMessage, false);
 // Main routines
 // ----------------------------------------------------------------------------
 function render(type, newProps) {
+  if (newProps.eval) {
+    try {
+      eval('var __evalledProps = ' + newProps.string + ';');
+      console.debug('Evaluated props:', __evalledProps)
+      newProps = __evalledProps;
+    }
+    catch(e) {
+      console.error('Unable to evaluate preset props!', e.message);
+
+      postMessageToParent('error', {
+        message: e.message,
+        context: 'eval',
+        propName: '[preset props]',
+        propValue: newProps.string
+      });
+
+      return;
+    }
+  }
+
   console.log('Rendering "%s" with props:', type.displayName, newProps);
 
   var invalid = false;
