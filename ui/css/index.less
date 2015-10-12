@@ -7,6 +7,7 @@
   bottom: 0;
   left: 0;
   z-index: 10;
+  font-size: 1.15em;
 
   &__content {
     z-index: 1;
@@ -103,10 +104,17 @@
     margin: 0;
   }
 
-  &__save-props-btn {
+  &__prop-actionbar {
     position: fixed;
     bottom: 10%;
     margin-bottom: -1em;
+    width: 35%;
+  }
+
+  &__presets {
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 
   &__error-header {
@@ -117,6 +125,10 @@
   &__error-message {
     white-space: normal;
   }
+
+  .btn, select {
+    font-size: 11px;
+  }
 }
 
 .schemable({
@@ -124,12 +136,7 @@
     @base3: #333;
     @base2: lighten(@base3, 5%);
     @base1: #ddd;
-    @border-color: lighten(@base3, 10%);
-
-    // @base3: #dadada;
-    // @base2: #e4e4e4;
-    // @base1: #444;
-    // @border-color: lighten(@base3, 7.5%);
+    @border-color: #515151;
 
     background: @base3;
 
@@ -175,15 +182,27 @@
       padding: 0.5em;
     }
 
-    .btn {
-      background-color: @base2;
+    .btn, select {
+      transition: none;
+
       color: @base1;
-      box-shadow: 0 0 0 1px @border-color;
       border-radius: 2px;
+
+      background-color: #454545;
+      background-image: -webkit-gradient(linear,50% 0%,50% 100%,color-stop(0,#3e3e3e),color-stop(1,#333));
+      background-image: -webkit-linear-gradient(top,#3e3e3e,#333);
+      background-image: linear-gradient(top,#3e3e3e,#333);
+
+      box-shadow: 0 1px 0 rgba(255,255,255,.06),1px 1px 0 rgba(255,255,255,.03),-1px -1px 0 rgba(0,0,0,.02),inset 1px 1px 0 rgba(255,255,255,.05);
+      border: 1px solid #242424;
 
       &:hover {
         background: @base3;
       }
+    }
+
+    select {
+      padding: 1em;
     }
 
     &__component {

@@ -6,6 +6,7 @@ const IFrameCommunicator = require('./mixins/IFrameCommunicator');
 const renderIntoIFrame = require('./utils/renderIntoIFrame');
 const $ = require('jQueryUI');
 const { debounce } = require('lodash');
+const evalProps = require('./utils/evalProps');
 
 const TAB_CODE = 'code';
 const TAB_PREVIEW = 'preview';
@@ -17,7 +18,19 @@ const LiveExampleJSXTag = React.createClass({
     IFrameCommunicator.createMixin(function(message) {
       switch (message.type) {
         case 'ready':
+          const { tag } = this.props;
+
+          console.log(tag.elementProps)
+
           this.setState({ ready: true });
+
+          IFrameCommunicator.postMessage(React.findDOMNode(this.refs.iframe), {
+            type: 'render',
+            payload: {
+              elementName: tag.elementName,
+              props: evalProps(tag.elementProps),
+            }
+          });
           break;
 
         case 'resize':
@@ -64,7 +77,6 @@ const LiveExampleJSXTag = React.createClass({
       <ExampleRunner
         scripts={config.scripts}
         styleSheets={config.styleSheets}
-        code={this.props.tag.code.compiled}
         messageSource={IFrameCommunicator.getUID(this)}
         origin={IFrameCommunicator.getOrigin()}
       />,
@@ -93,7 +105,7 @@ const LiveExampleJSXTag = React.createClass({
           <MarkdownText>
             {[
               '```js',
-              tag.code.source.replace(/^[ ]{4}/gm, ''),
+              tag.sourceCode.replace(/^[ ]{4}/gm, ''),
               '```'
             ].join('\n')}
           </MarkdownText>

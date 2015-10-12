@@ -13,20 +13,18 @@ const PTGeneric = React.createClass({
   },
 
   render() {
-    const value = this.props.value || {};
-
     return (
       <div>
         <textarea
           ref="inputWidget"
           className="form-input"
           onChange={this.emitChangeOfText}
-          value={value.code}
+          value={this.getCode()}
         />
 
         <Checkbox
           value="string"
-          checked={!!value.eval}
+          checked={this.getEval()}
           children="Evaluate as JavaScript"
           onChange={this.emitChangeOfEval}
         />
@@ -55,11 +53,25 @@ const PTGeneric = React.createClass({
   },
 
   getCode() {
-    return this.props.value && this.props.value.code;
+    const { value } = this.props;
+
+    if (value && typeof value === 'object') {
+      return value.code;
+    }
+    else {
+      return value;
+    }
   },
 
   getEval() {
-    return this.props.value && this.props.value.eval;
+    const { value } = this.props;
+
+    if (value && typeof value === 'object') {
+      return value.eval;
+    }
+    else {
+      return false;
+    }
   }
 });
 

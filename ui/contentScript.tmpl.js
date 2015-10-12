@@ -46,10 +46,6 @@ function onMessage(e) {
 function onDOMContentLoaded() {
   contentBox = document.querySelector('<%- contentBoxSelector %>');
 
-  <% if (code) { %>
-    React.render(<%= code %>, contentBox);
-  <% } %>
-
   runHook('start', contentBox, function() {
     postMessageToParent('ready');
     postMessageToParent('resize', {

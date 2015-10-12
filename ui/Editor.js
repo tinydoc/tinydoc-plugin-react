@@ -9,6 +9,7 @@ const IFrameCommunicator = require('./mixins/IFrameCommunicator');
 const renderIntoIFrame = require('./utils/renderIntoIFrame');
 const PropType = require('./Editor/PropType');
 const Registry = require('./Editor/Registry');
+const evalProps = require('./utils/evalProps');
 
 Registry.setRenderers(require('./Editor/propTypes'));
 
@@ -126,18 +127,18 @@ const Editor = React.createClass({
     return (
       <form onSubmit={this.reloadExampleWithCurrentProps} className="react-editor__props">
         <fieldset>
-          {false && <legend>Props</legend>}
-
           {this.getPropTypes().map(this.renderPropControl)}
         </fieldset>
 
-        <div>
+        <div className="react-editor__prop-actionbar">
           <input
             type="submit"
             className="btn react-editor__save-props-btn"
             onClick={this.reloadExampleWithCurrentProps}
             value="Update"
           />
+
+          {this.renderPresets()}
         </div>
       </form>
     );
@@ -151,6 +152,27 @@ const Editor = React.createClass({
         getValue={this.getExampleProp}
         getDescription={this.getPropDescription}
       />
+    )
+  },
+
+  renderPresets() {
+    const presets = this.props.moduleDoc.tags.filter(function(tag) {
+      return tag.type === 'live_example' && tag.exampleType === 'jsx';
+    });
+
+    return (
+      <select onChange={this.switchToPreset} className="react-editor__presets">
+        <option key="-">Choose a Preset</option>
+        {presets.map(this.renderPreset)}
+      </select>
+    )
+  },
+
+  renderPreset(tag, i) {
+    return (
+      <option key={tag.sourceCode} value={tag.sourceCode}>
+        Preset {i+1}
+      </option>
     )
   },
 
@@ -251,6 +273,19 @@ const Editor = React.createClass({
 
   showStack() {
     this.setState({ withStackTrace: true });
+  },
+
+  switchToPreset(e) {
+    const sourceCode = e.target.value;
+    const tag = this.props.moduleDoc.tags.filter(function(tag) {
+      return tag.sourceCode === sourceCode;
+    })[0];
+
+    const props = tag ? evalProps(tag.elementProps) : {};
+
+    this.setState({ props }, () => {
+      this.reloadExampleWithCurrentProps();
+    });
   }
 });
 
