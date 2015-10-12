@@ -1,44 +1,93 @@
 var contentBox;
 var origin = "<%- origin %>";
 
+var defaultHooks = {
+  start: function(container, done) {
+    done();
+  },
+
+  render: function(type, props, container, done) {
+    React.render(React.createElement(type, props), container, done);
+  },
+
+  stop: function(container) {
+    React.unmountComponentAtNode(container);
+  }
+};
+
 // ----------------------------------------------------------------------------
 // Events
 // ----------------------------------------------------------------------------
-window.addEventListener('message', function(e) {
-  var type;
-
+function onMessage(e) {
   if (e.origin !== origin) {
     return;
   }
 
-  type = window[e.data.elementName];
+  switch(e.data.type) {
+    case 'render':
+      var payload = e.data.payload;
+      var type = window[payload.elementName];
 
-  if (type) {
-    render(type, e.data.props);
+      if (type) {
+        render(type, payload.props);
+      }
+      else {
+        postMessageToParent('error', {
+          message: (
+            'Component with the name "' + payload.elementName + '" does not exist! ' +
+            'This probably means the component was not exported correctly.'
+          )
+        });
+      }
+    break;
   }
-  else {
-    postMessageToParent('error', {
-      message: (
-        'Component with the name "' + e.data.elementName + '" does not exist! ' +
-        'This probably means the component was not exported correctly.'
-      )
-    });
-  }
-}, false);
+}
 
-window.addEventListener('DOMContentLoaded', function() {
+function onDOMContentLoaded() {
   contentBox = document.querySelector('<%- contentBoxSelector %>');
 
   <% if (code) { %>
     React.render(<%= code %>, contentBox);
   <% } %>
 
-  postMessageToParent('ready');
-  postMessageToParent('resize', {
-    width: calculateWidth(),
-    height: calculateHeight(),
+  runHook('start', contentBox, function() {
+    postMessageToParent('ready');
+    postMessageToParent('resize', {
+      width: calculateWidth(),
+      height: calculateHeight(),
+    });
   });
-}, false);
+}
+
+function onUnload() {
+  console.debug('Tearing down...');
+
+  try {
+    runHook('stop', contentBox);
+  }
+  catch(e) {
+    console.error('An error occured while running the "stop" hook.')
+    console.error(e);
+  }
+  finally {
+    window.removeEventListener('unload', onUnload, false);
+    window.removeEventListener('DOMContentLoaded', onDOMContentLoaded, false);
+    window.removeEventListener('message', onMessage, false);
+  }
+
+  // we ALWAYS want to try to unmount whatever could be mounted on the
+  // contentBox, in case the user forgot to do this
+  try {
+    React.unmountComponentAtNode(contentBox);
+  }
+  catch(e) {}
+
+  console.debug('Tear-down complete.');
+}
+
+window.addEventListener('DOMContentLoaded', onDOMContentLoaded, false);
+window.addEventListener('unload', onUnload, false);
+window.addEventListener('message', onMessage, false);
 
 // ----------------------------------------------------------------------------
 // Main routines
@@ -82,7 +131,7 @@ function render(type, newProps) {
 
   if (!invalid) {
     try {
-      React.render(React.createElement(type, props), contentBox, function() {
+      runHook('render', type, props, contentBox, function() {
         postMessageToParent('updated');
         postMessageToParent('resize', {
           width: calculateWidth(),
@@ -131,4 +180,12 @@ function postMessageToParent(type, payload) {
     source: '<%- messageSource %>',
     payload: payload
   }, origin);
+}
+
+function runHook() {
+  var args = [].slice.call(arguments);
+  var name = args.shift();
+  var hook = (window.ReactBrowser || {})[name] || defaultHooks[name];
+
+  hook.apply(null, args);
 }

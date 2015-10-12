@@ -1,5 +1,5 @@
 const React = require('react');
-const LiveExampleJSXTag = require('./LiveExampleTag');
+const LiveExampleTag = require('./LiveExampleTag');
 
 module.exports = function createLiveExamples(config) {
   return React.createClass({
@@ -23,7 +23,7 @@ module.exports = function createLiveExamples(config) {
 
     renderTag(tag) {
       return (
-        <LiveExampleJSXTag key={tag.string} config={config} tag={tag} />
+        <LiveExampleTag key={tag.string} config={config} tag={tag} />
       );
     }
   });

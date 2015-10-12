@@ -37,7 +37,7 @@ tinydoc.use(function ReactPlugin(api) {
       })
     });
 
-    api.registerOutletElement('CJS::ContentPanel', {
+    api.registerOutletElement('CJS::ModuleBody', {
       component: React.createClass({
         render() {
           if (this.props.query.editing) {

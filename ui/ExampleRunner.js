@@ -30,12 +30,18 @@ const ExampleRunner = React.createClass({
           <meta httpEquiv="X-UA-Compatible" content="IE=Edge" />
 
           {this.props.styleSheets.map(this.renderStyleSheet)}
+
+          <script
+            dangerouslySetInnerHTML={{
+              __html: 'window.ReactBrowser = {};'
+            }}
+          />
+
+          {this.props.scripts.map(this.renderScript)}
         </head>
 
         <body>
           <div id="example" style={{ padding: '1em' }} />
-
-          {this.props.scripts.map(this.renderScript)}
 
           <script
             dangerouslySetInnerHTML={{

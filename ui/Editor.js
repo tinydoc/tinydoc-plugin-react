@@ -128,7 +128,7 @@ const Editor = React.createClass({
         <fieldset>
           {false && <legend>Props</legend>}
 
-          {this.getPropTypes().map((propType) => this.renderPropControl(propType))}
+          {this.getPropTypes().map(this.renderPropControl)}
         </fieldset>
 
         <div>
@@ -155,7 +155,7 @@ const Editor = React.createClass({
   },
 
   getModuleDoc() {
-    return this.props.database.getModule(this.props.params.moduleId);
+    return this.props.moduleDoc;
   },
 
   getPropTypes() {
@@ -176,7 +176,7 @@ const Editor = React.createClass({
   },
 
   getPropDescription(path) {
-    const moduleDocs = this.props.database.getModuleEntities(this.props.params.moduleId);
+    const { moduleDocs } = this.props;
     const entityDoc = moduleDocs.filter(d => d.id === path)[0];
 
     if (entityDoc) {
@@ -231,8 +231,11 @@ const Editor = React.createClass({
     }
 
     IFrameCommunicator.postMessage(React.findDOMNode(this.refs.iframe), {
-      elementName: this.getModuleDoc().name,
-      props: this.state.props,
+      type: 'render',
+      payload: {
+        elementName: this.getModuleDoc().name,
+        props: this.state.props,
+      }
     });
   },
 
