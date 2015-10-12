@@ -19,8 +19,6 @@ const LiveExampleJSXTag = React.createClass({
         case 'ready':
           const { tag } = this.props;
 
-          console.log(tag.elementProps)
-
           IFrameCommunicator.postMessage(React.findDOMNode(this.refs.iframe), {
             type: 'render',
             payload: {
@@ -38,10 +36,13 @@ const LiveExampleJSXTag = React.createClass({
           break;
 
         case 'resize':
-          this.setState({
-            frameWidth: message.payload.width,
-            frameHeight: message.payload.height,
-          });
+          if (this.props.config.autoResizeFrame) {
+            this.setState({
+              frameWidth: message.payload.width,
+              frameHeight: message.payload.height,
+            });
+          }
+
           break;
       }
     })
@@ -68,8 +69,8 @@ const LiveExampleJSXTag = React.createClass({
     return {
       activeTab: TAB_PREVIEW,
       ready: false,
-      frameWidth: null,
-      frameHeight: null,
+      frameWidth: this.props.config.frameWidth || null,
+      frameHeight: this.props.config.frameHeight || null,
       maximized: false,
     };
   },

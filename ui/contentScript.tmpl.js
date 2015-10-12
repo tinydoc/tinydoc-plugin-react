@@ -56,7 +56,7 @@ function onDOMContentLoaded() {
 }
 
 function onUnload() {
-  console.debug('Tearing down...');
+  console.debug('Tearing down (source: <%- messageSource %>)...');
 
   try {
     runHook('stop', contentBox);
@@ -78,7 +78,7 @@ function onUnload() {
   }
   catch(e) {}
 
-  console.debug('Tear-down complete.');
+  console.debug('Tear-down complete (source: <%- messageSource %>).');
 }
 
 window.addEventListener('DOMContentLoaded', onDOMContentLoaded, false);
@@ -91,9 +91,7 @@ window.addEventListener('message', onMessage, false);
 function render(type, newProps) {
   if (newProps.eval) {
     try {
-      eval('var __evalledProps = ' + newProps.string + ';');
-      console.debug('Evaluated props:', __evalledProps)
-      newProps = __evalledProps;
+      eval('newProps = ' + newProps.string + ';');
     }
     catch(e) {
       console.error('Unable to evaluate preset props!', e.message);
