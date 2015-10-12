@@ -48,6 +48,12 @@ const Editor = React.createClass({
       />,
       React.findDOMNode(this.refs.iframe)
     );
+
+    document.body.addEventListener('keydown', this.closeOnEscape);
+  },
+
+  componentWillUnmount: function() {
+    document.body.removeEventListener('keydown', this.closeOnEscape);
   },
 
   render() {
@@ -293,6 +299,12 @@ const Editor = React.createClass({
       string: tag.elementProps,
       eval: true
     });
+  },
+
+  closeOnEscape(e) {
+    if ([e.which,e.keyCode,e.key].indexOf(27) > -1) {
+      this.props.onClose();
+    }
   }
 });
 
