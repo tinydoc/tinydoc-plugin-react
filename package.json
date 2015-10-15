@@ -2,7 +2,7 @@
   "name": "tinydoc-plugin-react",
   "version": "1.0.0",
   "description": "Document React components and preview them in Tinydoc.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "./bin/test.sh",
     "build": "./node_modules/tinydoc/cli/tinydoc compile dist/tinydoc-plugin-react-ui.js ui/index.js"
