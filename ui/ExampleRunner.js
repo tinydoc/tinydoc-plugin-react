@@ -1,7 +1,7 @@
 const React = require('react');
 const { template } = require('lodash');
 const contentScript = template(require('raw!./contentScript.tmpl.js'));
-const { arrayOf, string } = React.PropTypes;
+const { arrayOf, string, oneOf } = React.PropTypes;
 
 const ExampleRunner = React.createClass({
   propTypes: {
@@ -9,6 +9,7 @@ const ExampleRunner = React.createClass({
     scripts: arrayOf(string),
     code: string,
     messageSource: string,
+    alignment: oneOf([ 'left', 'center', 'right' ])
   },
 
   componentDidMount() {
@@ -41,7 +42,13 @@ const ExampleRunner = React.createClass({
         </head>
 
         <body>
-          <div id="example" style={{ padding: '1em' }} />
+          <div
+            id="example"
+            style={{
+              padding: '1em',
+              textAlign: this.props.alignment || 'left'
+            }}
+          />
 
           <script
             dangerouslySetInnerHTML={{

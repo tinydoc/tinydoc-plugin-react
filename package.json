@@ -1,6 +1,6 @@
 {
   "name": "tinydoc-plugin-react",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Document React components and preview them in Tinydoc.",
   "main": "lib/index.js",
   "scripts": {

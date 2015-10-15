@@ -10,7 +10,7 @@ const { debounce } = require('lodash');
 const TAB_CODE = 'code';
 const TAB_PREVIEW = 'preview';
 
-const { shape, arrayOf, string } = React.PropTypes;
+const { shape, arrayOf, string, oneOf } = React.PropTypes;
 
 const LiveExampleJSXTag = React.createClass({
   mixins: [
@@ -57,6 +57,7 @@ const LiveExampleJSXTag = React.createClass({
     tag: shape({
       width: string,
       height: string,
+      alignment: oneOf([ 'left', 'centered', 'right' ]),
 
       code: shape({
         source: string.isRequired,
@@ -84,6 +85,7 @@ const LiveExampleJSXTag = React.createClass({
         styleSheets={config.styleSheets}
         messageSource={IFrameCommunicator.getUID(this)}
         origin={IFrameCommunicator.getOrigin()}
+        alignment={this.props.tag.alignment || 'left'}
       />,
       React.findDOMNode(this.refs.iframe)
     );

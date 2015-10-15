@@ -119,12 +119,12 @@
 
   &__error-header {
     font-weight: bold;
-    margin: 0 0 1em 0;
+    padding: 1em;
+    margin-top: -0.90em;
+    margin-left: -0.90em;
+    margin-right: -0.90em;
   }
 
-  &__error-message {
-    white-space: normal;
-  }
 
   .btn, select {
     font-size: 11px;
@@ -176,12 +176,12 @@
     }
 
     &__error-box {
-      background: fade(@solarized-red, 30%);
       padding: 1em;
     }
 
     &__error-header {
-      color: @solarized-red;
+      background: @solarized-red;
+      color: white;
     }
 
     .form-input {

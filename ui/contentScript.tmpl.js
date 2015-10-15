@@ -31,6 +31,10 @@ function onMessage(e) {
       var payload = e.data.payload;
       var type = window[payload.elementName];
 
+      if (!type && React.DOM.hasOwnProperty(payload.elementName)) {
+        type = payload.elementName;
+      }
+
       if (type) {
         render(type, payload.props);
       }
@@ -110,7 +114,7 @@ function render(type, newProps) {
     }
   }
 
-  console.log('Rendering "%s" with props:', type.displayName, newProps);
+  console.log('Rendering "%s" with props:', type.displayName || type, newProps);
 
   var invalid = false;
   var props = Object.keys(newProps).reduce(function(_props, key) {
