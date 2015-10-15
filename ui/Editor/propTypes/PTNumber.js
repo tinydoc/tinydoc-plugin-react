@@ -19,7 +19,7 @@ const PTNumber = React.createClass({
       newValue = undefined;
     }
     else {
-      newValue = parseFloat(number);
+      newValue = number;
     }
 
     this.props.onChange(this.props.path, newValue);

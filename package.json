@@ -4,7 +4,8 @@
   "description": "Document React components and preview them in Tinydoc.",
   "main": "index.js",
   "scripts": {
-    "test": "./bin/test.sh"
+    "test": "./bin/test.sh",
+    "build": "./node_modules/tinydoc/cli/tinydoc compile dist/tinydoc-plugin-react-ui.js ui/index.js"
   },
   "repository": {
     "type": "git",
@@ -22,9 +23,10 @@
   },
   "homepage": "https://github.com/tinydoc/tinydoc-plugin-react#readme",
   "dependencies": {
-    "babel-core": "^5.8.25",
-    "lodash": "^3.10.1",
-    "recast": "^0.10.33"
+    "babel-core": "5.8.25",
+    "lodash": "3.x",
+    "recast": "0.10.33",
+    "tinydoc": ">= 3.0"
   },
   "devDependencies": {
     "mocha": "^2.3.3"

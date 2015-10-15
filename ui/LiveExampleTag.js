@@ -1,5 +1,5 @@
 const React = require("react");
-const MarkdownText = require('components/MarkdownText');
+const HighlightedText = require('components/HighlightedText');
 const Button = require('components/Button');
 const ExampleRunner = require('./ExampleRunner');
 const IFrameCommunicator = require('./mixins/IFrameCommunicator');
@@ -107,13 +107,9 @@ const LiveExampleJSXTag = React.createClass({
         {this.renderControls()}
 
         {this.state.activeTab === TAB_CODE && (
-          <MarkdownText>
-            {[
-              '```js',
-              tag.sourceCode.replace(/^[ ]{4}/gm, ''),
-              '```'
-            ].join('\n')}
-          </MarkdownText>
+          <HighlightedText unsafe>
+            <pre>{tag.sourceCode.replace(/^[ ]{4}/gm, '')}</pre>
+          </HighlightedText>
         )}
 
         <div

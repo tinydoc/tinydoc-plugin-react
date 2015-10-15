@@ -1,3 +1,5 @@
+# tinydoc-plugin-react
+
 This plugin extends the core tinydoc's JS plugin with support for [React](http://facebook.github.io/react) components both during the analysis phase and in the UI.
 
 ## Features
@@ -13,6 +15,12 @@ Core/analysis stuff:
 - in-depth analysis of `propTypes`
 - understands `statics` so that tinydoc will be able to properly differentiate between instance and static methods in the UI
 
+## Installation
+
+```
+npm install -g tinydoc-plugin-react
+```
+
 ## Usage
 
 This plugin expects to be installed onto one or more tinydoc JS plugins so that it provides them with the React support:
@@ -23,9 +31,7 @@ var jsPlugin = require('tinydoc/plugins/cjs')({
 });
 
 var reactPlugin = require('tinydoc-plugin-react')({
-  targets: [
-    jsPlugin
-  ]
+  targets: [ jsPlugin ]
 });
 ```
 
@@ -77,7 +83,7 @@ var reactPlugin = require('tinydoc-plugin-react')({
 
     // this is where webpack will write its stuff
     var outputDir = compiler.utils.getTmpDir();
-    var outputFileName = 'styleguide.js';
+    var outputFileName = 'my-react-components.js';
 
     var webpackConfig = {
       entry: entryFilePath,
@@ -89,7 +95,6 @@ var reactPlugin = require('tinydoc-plugin-react')({
 
     webpack(webpackConfig, function(fatalError, stats) {
       if (fatalError) {
-        console.error('component compilation failed!!!', fatalError);
         return done(fatalError);
       }
 
