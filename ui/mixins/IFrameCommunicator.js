@@ -1,9 +1,21 @@
 let communicatorUID = 0;
 
 const origin = (function() {
-  var port = window.location.port;
-  var host = `${window.location.protocol}//${window.location.hostname}`;
-  return port ? `${host}:${port}` : host;
+  const { location } = window;
+
+  // see https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
+  if (location.protocol === 'file:') {
+    return '*';
+  }
+  else if (location.origin) {
+    return location.origin;
+  }
+  else if (location.port) {
+    return `${location.protocol}//${location.hostname}:${location.port}`;
+  }
+  else {
+    return `${location.protocol}//${location.hostname}`;
+  }
 }());
 
 function validateAndPropagateMessage(uid, onMessage, e) {

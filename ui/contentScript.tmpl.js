@@ -15,11 +15,14 @@ var defaultHooks = {
   }
 };
 
+var isInFileMode = origin === '*' && window.location.protocol === 'file:';
+
 // ----------------------------------------------------------------------------
 // Events
 // ----------------------------------------------------------------------------
 function onMessage(e) {
-  if (e.origin !== origin) {
+  if (e.origin !== origin && !isInFileMode) {
+    console.warn('Rejecting message from unknown origin:', e.origin);
     return;
   }
 
