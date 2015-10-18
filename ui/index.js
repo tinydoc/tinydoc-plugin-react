@@ -2,12 +2,13 @@ const React = require('react');
 const Router = require('core/Router');
 const Editor = require('./Editor');
 const LiveExampleTag = require('./LiveExampleTag');
-
-require('./css/index.less');
+const OutletManager = require('core/OutletManager');
 
 tinydoc.use(function ReactPlugin(api) {
   tinydoc.getRuntimeConfigs('react').forEach(function(config) {
-    api.registerOutletElement('CJS::ExampleTag', {
+    OutletManager.add('CJS::ExampleTag', {
+      key: 'jsx-example-tag',
+
       match: function(tag) {
         return tag.typeInfo.types[0] === 'jsx';
       },
@@ -19,7 +20,9 @@ tinydoc.use(function ReactPlugin(api) {
       })
     });
 
-    api.registerOutletElement('CJS::ModuleHeader::Type', {
+    OutletManager.add('CJS::ModuleHeader::Type', {
+      key: 'react-component-type',
+
       match: function(props) {
         return props.doc.ctx.type === 'component';
       },
@@ -43,7 +46,9 @@ tinydoc.use(function ReactPlugin(api) {
       })
     });
 
-    api.registerOutletElement('CJS::ModuleBody', {
+    OutletManager.add('CJS::ModuleBody', {
+      key: 'jsx-editor',
+
       component: React.createClass({
         render() {
           if (this.props.query.editing) {

@@ -8,6 +8,7 @@ var config = {
   useHashLocation: true,
   publicPath: '',
   disqus: false,
+  layout: 'single-page',
 };
 
 config.plugins = [
