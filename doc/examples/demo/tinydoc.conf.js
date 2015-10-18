@@ -14,7 +14,7 @@ var reactPlugin = require('../../../lib')({
   routeName: 'demo',
 
   scripts: [
-    'node_modules/react/dist/react.js',
+    'node_modules/react/dist/react.min.js',
     'doc/compiled/assets/demo.js',
   ],
 
