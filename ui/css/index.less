@@ -60,13 +60,9 @@
     }
 
     &--oneOfType {
-      .qradio {
+      .radio {
+        display: inline-block;
         margin-right: 1em;
-      }
-
-      .qradio__indicator {
-        vertical-align: top;
-        line-height: 1.4;
       }
     }
   }
@@ -228,7 +224,7 @@
 
   .live-example-tag {
     &__iframe-container {
-      border: 3px solid @border-color;
+      border: 3px solid @base2;
       width: auto;
       display: inline-block;
       background: white;
@@ -247,11 +243,14 @@
 
       .btn {
         font-size: 0.85em;
-        padding: 0.5em 1em;
+        padding: 0.5em 1em 0.5em 0;
+        border-radius: 3px;
+        background: none;
+        color: @link;
       }
 
       .btn.active {
-        background-color: @base3;
+        color: inherit;
       }
     }
   }

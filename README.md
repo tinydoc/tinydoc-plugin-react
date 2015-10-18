@@ -23,21 +23,27 @@ npm install -g tinydoc-plugin-react
 
 ## Usage
 
-This plugin expects to be installed onto one or more tinydoc JS plugins so that it provides them with the React support:
+This plugin expects to be installed onto a tinydoc JS plugin so that it provides its sources with the React support:
 
 ```javascript
+// @file tinydoc.conf.js
+
 var jsPlugin = require('tinydoc/plugins/cjs')({
-  source: [ 'lib/**/*.js' ]
+  routeName: 'js',
+  source: [ 'lib/components/**/*.js' ]
 });
 
 var reactPlugin = require('tinydoc-plugin-react')({
-  targets: [ jsPlugin ]
+  routeName: 'js' // <- this must match the JS plugin's
 });
+
+config.plugins.push(jsPlugin);
+config.plugins.push(reactPlugin);
 ```
 
 This gives you the flexibility to, for example, run this plugin only on a subset of JS files (your component files) and leave the rest of the codebase.
 
-Refer to the [Config config]() page for more on tuning the plugin.
+Unfortunately, a bit more setup is required to make the examples show up. Please refer to the [Config config]() page for more on tuning the plugin.
 
 ### Compiling your component files
 

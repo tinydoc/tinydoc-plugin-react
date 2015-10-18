@@ -5,8 +5,6 @@ var config = {
   title: 'tinydoc React',
   outputDir: 'doc/compiled',
   readme: 'README.md',
-  useHashLocation: true,
-  publicPath: '',
   disqus: false,
   layout: 'single-page',
 };
@@ -26,7 +24,9 @@ config.plugins = [
     ],
 
     showSourcePaths: false
-  })
+  }),
 ];
+
+require('./examples/demo/tinydoc.conf.js')(config);
 
 module.exports = config;

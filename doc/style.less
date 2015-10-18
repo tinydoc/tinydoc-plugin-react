@@ -1,0 +1,62 @@
+@import (reference) "~helpers";
+
+.single-page-layout {
+  &__content {
+    width: 640px;
+    font-size: 16px;
+
+    h1,h2,h3 {
+      font-weight: bold;
+    }
+  }
+
+  &__sidebar {
+    &-header {
+      font-size: 1em;
+      line-height: 2em;
+      font-weight: bold;
+    }
+  }
+
+  .two-column-layout__left {
+    width: 200px;
+  }
+
+  &__home-link {
+    font-size: 1.25em;
+    line-height: 3;
+    margin-bottom: 0;
+  }
+}
+
+.schemable({
+  .react-editor {
+    font-size: 15px;
+
+    h1,h2,h3 {
+      font-weight: 400;
+    }
+  }
+
+  .two-column-layout__left {
+    .ui-resizable-handle {
+      background: darken(@border-color, 5%);
+      border-right: 2px solid @base3;
+    }
+  }
+
+  .single-page-layout {
+    &__sidebar-header {
+      text-transform: uppercase;
+      border-bottom: 1px solid @border-color;
+      margin-bottom: 1em;
+      padding: 1em 0 0.5em 0;
+    }
+  }
+
+  pre, .hljs, .hljs > code {
+    background: @base3;
+    font: 14px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    line-height: 1.45;
+  }
+});

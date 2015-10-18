@@ -3,28 +3,37 @@ const Router = require('core/Router');
 const Editor = require('./Editor');
 const LiveExampleTag = require('./LiveExampleTag');
 const OutletManager = require('core/OutletManager');
+const Link = require('components/Link');
 
 tinydoc.use(function ReactPlugin(api) {
   tinydoc.getRuntimeConfigs('react').forEach(function(config) {
-    OutletManager.add('CJS::ExampleTag', {
-      key: 'jsx-example-tag',
+    const { routeName } = config;
 
-      match: function(tag) {
-        return tag.typeInfo.types[0] === 'jsx';
+    OutletManager.add('CJS::ExampleTag', {
+      key: `${routeName}__jsx-example-tag`,
+
+      match: function(props) {
+        return (
+          props.tag.typeInfo.types[0] === 'jsx' &&
+          props.routeName === routeName
+        );
       },
 
       component: React.createClass({
         render() {
-          return <LiveExampleTag tag={this.props} config={config} />;
+          return <LiveExampleTag tag={this.props.tag} config={config} />;
         }
       })
     });
 
     OutletManager.add('CJS::ModuleHeader::Type', {
-      key: 'react-component-type',
+      key: `${routeName}__react-component-type`,
 
       match: function(props) {
-        return props.doc.ctx.type === 'component';
+        return (
+          props.doc.ctx.type === 'component' &&
+          props.routeName === routeName
+        );
       },
 
       component: React.createClass({
@@ -32,32 +41,45 @@ tinydoc.use(function ReactPlugin(api) {
           return (
             <span>
               <span>Component</span>
+
               {' '}
-              <a onClick={this.toggleEditor}>Try it!</a>
+
+              <Link
+                to={`${routeName}.module`}
+                params={{ moduleId: this.props.doc.id }}
+                query={{
+                  editing: '1',
+                  source: routeName
+                }}
+                children="Try it!"
+              />
             </span>
           );
-        },
-
-        toggleEditor() {
-          Router.updateQuery({
-            editing: Router.getQueryItem('editing') ? null : 1
-          });
         }
       })
     });
 
     OutletManager.add('CJS::ModuleBody', {
-      key: 'jsx-editor',
+      key: `${routeName}__jsx-editor`,
+
+      match(props) {
+        return (
+          props.moduleDoc.ctx.type === 'component' &&
+          props.routeName === routeName
+        );
+      },
 
       component: React.createClass({
         render() {
-          if (this.props.query.editing) {
+          console.log(this.props);
+
+          if (
+            this.props.query.editing &&
+            this.props.query.source === routeName &&
+            this.props.params.moduleId === this.props.moduleDoc.id
+          ) {
             return (
-              <Editor
-                config={config}
-                onClose={this.close}
-                {...this.props}
-              />
+              <Editor config={config} onClose={this.close} {...this.props} />
             );
           }
           else {
@@ -66,7 +88,10 @@ tinydoc.use(function ReactPlugin(api) {
         },
 
         close() {
-          Router.updateQuery({ editing: null });
+          Router.updateQuery({
+            editing: null,
+            source: null
+          });
         }
       })
     });

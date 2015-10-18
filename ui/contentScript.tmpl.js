@@ -114,7 +114,9 @@ function render(type, newProps) {
     }
   }
 
-  console.log('Rendering "%s" with props:', type.displayName || type, newProps);
+  var displayName = type.displayName || (typeof type === 'string' && type);
+
+  console.log('Rendering "%s" with props:', displayName, newProps);
 
   var invalid = false;
   var props = Object.keys(newProps).reduce(function(_props, key) {
@@ -142,6 +144,9 @@ function render(type, newProps) {
 
         invalid = true;
       }
+    }
+    else if (!!value && typeof value === 'object' && value.code) {
+      _props[key] = value.code;
     }
     else {
       _props[key] = value;

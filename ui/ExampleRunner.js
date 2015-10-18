@@ -41,7 +41,7 @@ const ExampleRunner = React.createClass({
           {this.props.scripts.map(this.renderScript)}
         </head>
 
-        <body>
+        <body style={{ margin: 0, padding: 0 }}>
           <div
             id="example"
             style={{
