@@ -1,4 +1,0 @@
-[submodule "doc/compiled"]
-	path = doc/compiled
-	url = git@github.com:tinydoc/tinydoc-plugin-react
-	branch = gh-pages

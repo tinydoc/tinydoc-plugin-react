@@ -7,6 +7,7 @@ var config = {
   readme: 'README.md',
   disqus: false,
   layout: 'single-page',
+  stylesheet: 'doc/style.less',
 };
 
 config.plugins = [
