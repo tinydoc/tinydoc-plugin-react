@@ -4,8 +4,8 @@ const Button = require('components/Button');
 const ExampleRunner = require('./ExampleRunner');
 const IFrameCommunicator = require('./mixins/IFrameCommunicator');
 const renderIntoIFrame = require('./utils/renderIntoIFrame');
-const $ = require('jQueryUI');
 const { debounce } = require('lodash');
+const resizable = require('utils/resizable');
 
 const TAB_CODE = 'code';
 const TAB_PREVIEW = 'preview';
@@ -90,14 +90,14 @@ const LiveExampleJSXTag = React.createClass({
       React.findDOMNode(this.refs.iframe)
     );
 
-    $(React.findDOMNode(this.refs.iframeContainer))
-      .resizable({})
-      .on('resize', this.maximizeFrame)
-    ;
+    this.resizableInstance = resizable(React.findDOMNode(this.refs.resizer), {
+      target: React.findDOMNode(this.refs.iframeContainer),
+      onResizeStart: this.maximizeFrame
+    });
   },
 
   componentWillUnmount: function() {
-    $(React.findDOMNode(this.refs.iframeContainer)).resizable('destroy');
+    this.resizableInstance.destroy();
   },
 
   render() {
@@ -116,6 +116,11 @@ const LiveExampleJSXTag = React.createClass({
 
         <div
           ref="iframeContainer"
+          style={{
+            position: 'relative',
+            width: this.state.customWidth || 'auto',
+            height: this.state.customHeight || 'auto'
+          }}
           className={`
             live-example-tag__iframe-container
             ${this.state.activeTab !== TAB_PREVIEW ?
@@ -136,6 +141,8 @@ const LiveExampleJSXTag = React.createClass({
               height: maximized ? '100%' : tag.height || this.state.frameHeight,
             }}
           />
+
+          <div ref="resizer" className="ui-resizable-handle ui-resizable-se" />
         </div>
       </div>
     );
