@@ -1,6 +1,8 @@
 # tinydoc-plugin-react
 
-This plugin extends the core tinydoc's JS plugin with support for [React](http://facebook.github.io/react) components both during the analysis phase and in the UI.
+This plugin extends [tinydoc's JS plugin](https://github.com/tinydoc/tinydoc-plugin-js) with support for [React](http://facebook.github.io/react) components both during the analysis phase and in the UI.
+
+A demo can be [seen here](http://tinydoc.github.io/tinydoc-plugin-react/). Make sure you try out the real-time editor by clicking on the `Try it!` link for component modules.
 
 ## Features
 
@@ -18,7 +20,7 @@ Core/analysis stuff:
 ## Installation
 
 ```
-npm install -g tinydoc-plugin-react
+npm install tinydoc tinydoc-plugin-js tinydoc-plugin-react
 ```
 
 ## Usage
@@ -28,7 +30,7 @@ This plugin expects to be installed onto a tinydoc JS plugin so that it provides
 ```javascript
 // @file tinydoc.conf.js
 
-var jsPlugin = require('tinydoc/plugins/cjs')({
+var jsPlugin = require('tinydoc-plugins-js')({
   routeName: 'js',
   source: [ 'lib/components/**/*.js' ]
 });
@@ -44,6 +46,8 @@ config.plugins.push(reactPlugin);
 This gives you the flexibility to, for example, run this plugin only on a subset of JS files (your component files) and leave the rest of the codebase.
 
 Unfortunately, a bit more setup is required to make the examples show up. Please refer to the [Config config]() page for more on tuning the plugin.
+
+There are examples under `doc/examples` that show how to use a transformer if you need one (like webpack, browserify, etc.)
 
 ### Compiling your component files
 

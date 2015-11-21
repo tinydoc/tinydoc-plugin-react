@@ -71,8 +71,6 @@ tinydoc.use(function ReactPlugin(api) {
 
       component: React.createClass({
         render() {
-          console.log(this.props);
-
           if (
             this.props.query.editing &&
             this.props.query.source === routeName &&

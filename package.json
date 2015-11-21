@@ -1,11 +1,11 @@
 {
   "name": "tinydoc-plugin-react",
-  "version": "1.2.0",
+  "version": "4.0.1",
   "description": "Document React components and preview them in Tinydoc.",
   "main": "lib/index.js",
   "scripts": {
     "test": "./bin/test.sh",
-    "build": "./node_modules/tinydoc/cli/tinydoc compile dist/tinydoc-plugin-react-ui.js ui/index.js",
+    "build": "./node_modules/tinydoc/cli/tinydoc-compile dist/tinydoc-plugin-react-ui.js ui/index.js",
     "prepublish": "npm test && npm run build"
   },
   "repository": {
@@ -27,11 +27,13 @@
     "babel-core": "5.8.25",
     "lodash": "3.x",
     "recast": "0.10.33",
-    "tinydoc": ">= 3.2"
+    "tinydoc": "4.x",
+    "tinydoc-plugin-js": "4.x"
   },
   "devDependencies": {
     "babel-loader": "^5.3.2",
     "mocha": "^2.3.3",
+    "multiline-slash": "^1.0.0",
     "react": "^0.14.0",
     "webpack": "^1.12.2"
   }
